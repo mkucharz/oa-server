@@ -75,7 +75,7 @@ func (model *Model) UpdateTransaction(oldId string, transaction *types.Transacti
 
 	// We used to compare splits and if they hadn't changed just do an update
 	// on the transaction. The problem is then the updated field gets out of sync
-	// between the tranaction and its splits.
+	// between the transaction and its splits.
 	// It needs to be in sync for getTransactionsByOrg() to work correctly with pagination
 
 	// Delete old transaction and insert a new one
@@ -195,8 +195,8 @@ func (model *Model) checkSplits(transaction *types.Transaction) (err error) {
 
 		account := model.getAccountFromList(userAccounts, split.AccountId)
 
-		if account.HasChildren == true {
-			return errors.New("Cannot use parent account for split")
+		if account.HasChildren {
+			return errors.New("cannot use parent account for split")
 		}
 
 		if account.Currency == org.Currency && split.NativeAmount != split.Amount {

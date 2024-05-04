@@ -22,7 +22,7 @@ type Interface interface {
 	PriceInterface
 	SessionInterface
 	ApiKeyInterface
-	SystemHealthInteface
+	SystemHealthInterface
 	BudgetInterface
 }
 

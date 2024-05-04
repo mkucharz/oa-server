@@ -1,5 +1,5 @@
 package db
 
-type SystemHealthInteface interface {
+type SystemHealthInterface interface {
 	Ping() error
 }

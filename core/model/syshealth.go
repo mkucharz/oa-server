@@ -1,6 +1,6 @@
 package model
 
-type SystemHealthInteface interface {
+type SystemHealthInterface interface {
 	PingDatabase() error
 }
 

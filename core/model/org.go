@@ -199,9 +199,9 @@ func (model *Model) CreateInvite(invite *types.Invite, userId string) error {
 		return err
 	}
 
-	if invite.Email != "" {
-		// TODO send email
-	}
+	// if invite.Email {
+	// TODO: send email
+	// }
 
 	return nil
 }
@@ -222,13 +222,13 @@ func (model *Model) AcceptInvite(invite *types.Invite, userId string) error {
 		return err
 	}
 
-	if original.Accepted == true {
+	if original.Accepted {
 		return errors.New("invite already accepted")
 	}
 
 	oneWeekAfter := original.Inserted.Add(time.Hour * 24 * 7)
 
-	if time.Now().After(oneWeekAfter) == true {
+	if time.Now().After(oneWeekAfter) {
 		return errors.New("invite has expired")
 	}
 
@@ -255,8 +255,8 @@ func (model *Model) GetInvites(orgId string, userId string) ([]*types.Invite, er
 		}
 	}
 
-	if isAdmin == false {
-		return nil, errors.New("Must be org admin to invite users")
+	if !isAdmin {
+		return nil, errors.New("must be org admin to invite users")
 	}
 
 	return model.db.GetInvites(orgId)
@@ -287,8 +287,8 @@ func (model *Model) DeleteInvite(id string, userId string) error {
 		}
 	}
 
-	if isAdmin == false {
-		return errors.New("Must be org admin to delete invite")
+	if !isAdmin {
+		return errors.New("must be org admin to delete invite")
 	}
 
 	return model.db.DeleteInvite(id)

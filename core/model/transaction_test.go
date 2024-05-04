@@ -2,12 +2,13 @@ package model
 
 import (
 	"errors"
+	"testing"
+	"time"
+
 	"github.com/openaccounting/oa-server/core/model/db"
 	"github.com/openaccounting/oa-server/core/model/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"testing"
-	"time"
 )
 
 type TdTransaction struct {
@@ -28,7 +29,7 @@ func (td *TdTransaction) GetPermissionedAccountIds(userId string, orgId string, 
 }
 
 func (td *TdTransaction) GetAccountsByOrgId(orgId string) ([]*types.Account, error) {
-	return []*types.Account{&types.Account{Id: "1", Currency: "USD"}, &types.Account{Id: "2"}}, nil
+	return []*types.Account{{Id: "1", Currency: "USD"}, {Id: "2"}}, nil
 }
 
 func (td *TdTransaction) InsertTransaction(transaction *types.Transaction) (err error) {
@@ -57,72 +58,72 @@ func TestCreateTransaction(t *testing.T) {
 		"successful": {
 			err: nil,
 			tx: &types.Transaction{
-				"1",
-				"2",
-				"3",
-				time.Now(),
-				time.Now(),
-				time.Now(),
-				"description",
-				"",
-				false,
-				[]*types.Split{
-					&types.Split{"1", "1", 1000, 1000},
-					&types.Split{"1", "2", -1000, -1000},
+				Id:          "1",
+				OrgId:       "2",
+				UserId:      "3",
+				Date:        time.Now(),
+				Inserted:    time.Now(),
+				Updated:     time.Now(),
+				Description: "description",
+				Data:        "",
+				Deleted:     false,
+				Splits: []*types.Split{
+					{TransactionId: "1", AccountId: "1", Amount: 1000, NativeAmount: 1000},
+					{TransactionId: "1", AccountId: "2", Amount: -1000, NativeAmount: -1000},
 				},
 			},
 		},
 		"bad split amounts": {
 			err: errors.New("splits must add up to 0"),
 			tx: &types.Transaction{
-				"1",
-				"2",
-				"3",
-				time.Now(),
-				time.Now(),
-				time.Now(),
-				"description",
-				"",
-				false,
-				[]*types.Split{
-					&types.Split{"1", "1", 1000, 1000},
-					&types.Split{"1", "2", -500, -500},
+				Id:          "1",
+				OrgId:       "2",
+				UserId:      "3",
+				Date:        time.Now(),
+				Inserted:    time.Now(),
+				Updated:     time.Now(),
+				Description: "description",
+				Data:        "",
+				Deleted:     false,
+				Splits: []*types.Split{
+					{TransactionId: "1", AccountId: "1", Amount: 1000, NativeAmount: 1000},
+					{TransactionId: "1", AccountId: "2", Amount: -500, NativeAmount: -500},
 				},
 			},
 		},
 		"lacking permission": {
 			err: errors.New("user does not have permission to access account 3"),
 			tx: &types.Transaction{
-				"1",
-				"2",
-				"3",
-				time.Now(),
-				time.Now(),
-				time.Now(),
-				"description",
-				"",
-				false,
-				[]*types.Split{
-					&types.Split{"1", "1", 1000, 1000},
-					&types.Split{"1", "3", -1000, -1000},
+				Id:          "1",
+				OrgId:       "2",
+				UserId:      "3",
+				Date:        time.Now(),
+				Inserted:    time.Now(),
+				Updated:     time.Now(),
+				Description: "description",
+				Data:        "",
+				Deleted:     false,
+				Splits: []*types.Split{
+					{TransactionId: "1", AccountId: "1", Amount: 1000, NativeAmount: 1000},
+					{TransactionId: "1", AccountId: "3", Amount: -1000, NativeAmount: -1000},
 				},
 			},
 		},
 		"nativeAmount mismatch": {
 			err: errors.New("nativeAmount must equal amount for native currency splits"),
 			tx: &types.Transaction{
-				"1",
-				"2",
-				"3",
-				time.Now(),
-				time.Now(),
-				time.Now(),
-				"description",
-				"",
-				false,
-				[]*types.Split{
-					&types.Split{"1", "1", 1000, 500},
-					&types.Split{"1", "2", -1000, -500},
+				Id:          "1",
+				OrgId:       "2",
+				UserId:      "3",
+				Date:        time.Now(),
+				Inserted:    time.Now(),
+				Updated:     time.Now(),
+				Description: "description",
+				Data:        "",
+				Deleted:     false,
+				Splits: []*types.Split{
+					{TransactionId: "1", AccountId: "1", Amount: 1000, NativeAmount: 500},
+					{TransactionId: "1", AccountId: "2", Amount: -1000, NativeAmount: -500},
 				},
 			},
 		},

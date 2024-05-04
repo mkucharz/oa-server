@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"log"
-	"regexp"
+	"net/mail"
 	"time"
 
 	"github.com/mailgun/mailgun-go/v4"
@@ -18,6 +18,11 @@ type UserInterface interface {
 	UpdateUser(user *types.User) error
 	ResetPassword(email string) error
 	ConfirmResetPassword(string, string) (*types.User, error)
+}
+
+func isValidEmail(email string) bool {
+	_, err := mail.ParseAddress(email)
+	return err == nil
 }
 
 func (model *Model) CreateUser(user *types.User) error {
@@ -37,9 +42,7 @@ func (model *Model) CreateUser(user *types.User) error {
 		return errors.New("email required")
 	}
 
-	re := regexp.MustCompile(".+@.+\\..+")
-
-	if re.FindString(user.Email) == "" {
+	if !isValidEmail(user.Email) {
 		return errors.New("invalid email address")
 	}
 
@@ -47,7 +50,7 @@ func (model *Model) CreateUser(user *types.User) error {
 		return errors.New("password required")
 	}
 
-	if user.AgreeToTerms != true {
+	if !user.AgreeToTerms {
 		return errors.New("must agree to terms")
 	}
 
@@ -154,7 +157,7 @@ func (model *Model) ConfirmResetPassword(password string, code string) (*types.U
 	user, err := model.db.GetUserByResetCode(code)
 
 	if err != nil {
-		return nil, errors.New("Invalid code")
+		return nil, errors.New("invalid code")
 	}
 
 	passwordHash, err := model.bcrypt.GenerateFromPassword([]byte(password), model.bcrypt.GetDefaultCost())

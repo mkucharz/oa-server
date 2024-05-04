@@ -2,9 +2,10 @@ package model
 
 import (
 	"errors"
+	"time"
+
 	"github.com/openaccounting/oa-server/core/model/types"
 	"github.com/openaccounting/oa-server/core/ws"
-	"time"
 )
 
 type PriceInterface interface {
@@ -21,8 +22,8 @@ func (model *Model) CreatePrice(price *types.Price, userId string) error {
 		return err
 	}
 
-	if belongs == false {
-		return errors.New("User does not belong to org")
+	if !belongs {
+		return errors.New("user does not belong to org")
 	}
 
 	if price.Id == "" {
@@ -67,8 +68,8 @@ func (model *Model) DeletePrice(id string, userId string) error {
 		return err
 	}
 
-	if belongs == false {
-		return errors.New("User does not belong to org")
+	if !belongs {
+		return errors.New("user does not belong to org")
 	}
 
 	err = model.db.DeletePrice(id)
@@ -95,8 +96,8 @@ func (model *Model) GetPricesNearestInTime(orgId string, date time.Time, userId 
 		return nil, err
 	}
 
-	if belongs == false {
-		return nil, errors.New("User does not belong to org")
+	if !belongs {
+		return nil, errors.New("user does not belong to org")
 	}
 
 	return model.db.GetPricesNearestInTime(orgId, date)
@@ -109,8 +110,8 @@ func (model *Model) GetPricesByCurrency(orgId string, currency string, userId st
 		return nil, err
 	}
 
-	if belongs == false {
-		return nil, errors.New("User does not belong to org")
+	if !belongs {
+		return nil, errors.New("user does not belong to org")
 	}
 
 	return model.db.GetPricesByCurrency(orgId, currency)

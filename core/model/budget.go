@@ -2,6 +2,7 @@ package model
 
 import (
 	"errors"
+
 	"github.com/openaccounting/oa-server/core/model/types"
 )
 
@@ -18,8 +19,8 @@ func (model *Model) GetBudget(orgId string, userId string) (*types.Budget, error
 		return nil, err
 	}
 
-	if belongs == false {
-		return nil, errors.New("User does not belong to org")
+	if !belongs {
+		return nil, errors.New("user does not belong to org")
 	}
 
 	return model.db.GetBudget(orgId)
@@ -32,8 +33,8 @@ func (model *Model) CreateBudget(budget *types.Budget, userId string) error {
 		return err
 	}
 
-	if belongs == false {
-		return errors.New("User does not belong to org")
+	if !belongs {
+		return errors.New("user does not belong to org")
 	}
 
 	if budget.OrgId == "" {
@@ -50,8 +51,8 @@ func (model *Model) DeleteBudget(orgId string, userId string) error {
 		return err
 	}
 
-	if belongs == false {
-		return errors.New("User does not belong to org")
+	if !belongs {
+		return errors.New("user does not belong to org")
 	}
 
 	return model.db.DeleteBudget(orgId)

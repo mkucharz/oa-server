@@ -13,7 +13,7 @@ import (
 
 type TdUser struct {
 	db.Datastore
-	testNum int
+	// testNum int
 }
 
 func (td *TdUser) InsertUser(user *types.User) error {
