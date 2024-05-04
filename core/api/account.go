@@ -2,7 +2,7 @@ package api
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strconv"
 	"time"
@@ -85,7 +85,7 @@ func GetOrgAccounts(w rest.ResponseWriter, r *rest.Request) {
 }
 
 /**
- * @api {get} /orgs/:orgId/accounts/:accountId Get Acount by Org id and Account id
+ * @api {get} /orgs/:orgId/accounts/:accountId Get Account by Org id and Account id
  * @apiVersion 1.4.0
  * @apiName GetOrgAccount
  * @apiGroup Account
@@ -208,7 +208,7 @@ func PostAccount(w rest.ResponseWriter, r *rest.Request) {
 	user := r.Env["USER"].(*types.User)
 	orgId := r.PathParam("orgId")
 
-	content, err := ioutil.ReadAll(r.Body)
+	content, err := io.ReadAll(r.Body)
 	r.Body.Close()
 
 	if err != nil {

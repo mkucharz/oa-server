@@ -2,44 +2,45 @@ package model
 
 import (
 	"errors"
+	"testing"
+	"time"
+
 	"github.com/openaccounting/oa-server/core/mocks"
 	"github.com/openaccounting/oa-server/core/model/types"
 	"github.com/openaccounting/oa-server/core/util"
 	"github.com/stretchr/testify/assert"
-	"testing"
-	"time"
 )
 
 func TestCreatePrice(t *testing.T) {
 
 	price := types.Price{
-		"1",
-		"2",
-		"BTC",
-		time.Unix(0, 0),
-		time.Unix(0, 0),
-		time.Unix(0, 0),
-		6700,
+		Id:       "1",
+		OrgId:    "2",
+		Currency: "BTC",
+		Date:     time.Unix(0, 0),
+		Inserted: time.Unix(0, 0),
+		Updated:  time.Unix(0, 0),
+		Price:    6700,
 	}
 
 	badPrice := types.Price{
-		"1",
-		"2",
-		"",
-		time.Unix(0, 0),
-		time.Unix(0, 0),
-		time.Unix(0, 0),
-		6700,
+		Id:       "1",
+		OrgId:    "2",
+		Currency: "",
+		Date:     time.Unix(0, 0),
+		Inserted: time.Unix(0, 0),
+		Updated:  time.Unix(0, 0),
+		Price:    6700,
 	}
 
 	badOrg := types.Price{
-		"1",
-		"1",
-		"BTC",
-		time.Unix(0, 0),
-		time.Unix(0, 0),
-		time.Unix(0, 0),
-		6700,
+		Id:       "1",
+		OrgId:    "1",
+		Currency: "BTC",
+		Date:     time.Unix(0, 0),
+		Inserted: time.Unix(0, 0),
+		Updated:  time.Unix(0, 0),
+		Price:    6700,
 	}
 
 	tests := map[string]struct {
@@ -89,13 +90,13 @@ func TestCreatePrice(t *testing.T) {
 func TestDeletePrice(t *testing.T) {
 
 	price := types.Price{
-		"1",
-		"2",
-		"BTC",
-		time.Unix(0, 0),
-		time.Unix(0, 0),
-		time.Unix(0, 0),
-		6700,
+		Id:       "1",
+		OrgId:    "2",
+		Currency: "BTC",
+		Date:     time.Unix(0, 0),
+		Inserted: time.Unix(0, 0),
+		Updated:  time.Unix(0, 0),
+		Price:    6700,
 	}
 
 	tests := map[string]struct {

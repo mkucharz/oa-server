@@ -3,9 +3,10 @@ package model
 import (
 	"errors"
 	"fmt"
+	"time"
+
 	"github.com/openaccounting/oa-server/core/model/types"
 	"github.com/openaccounting/oa-server/core/ws"
-	"time"
 )
 
 type TransactionInterface interface {
@@ -105,7 +106,7 @@ func (model *Model) GetTransactionsByAccount(orgId string, userId string, accoun
 	}
 
 	if !model.accountsContainWriteAccess(userAccounts, accountId) {
-		return nil, errors.New(fmt.Sprintf("%s %s", "user does not have permission to access account", accountId))
+		return nil, fmt.Errorf("%s %s", "user does not have permission to access account", accountId)
 	}
 
 	return model.db.GetTransactionsByAccount(accountId, options)
@@ -142,7 +143,7 @@ func (model *Model) DeleteTransaction(id string, userId string, orgId string) (e
 
 	for _, split := range transaction.Splits {
 		if !model.accountsContainWriteAccess(userAccounts, split.AccountId) {
-			return errors.New(fmt.Sprintf("%s %s", "user does not have permission to access account", split.AccountId))
+			return fmt.Errorf("%s %s", "user does not have permission to access account", split.AccountId)
 		}
 	}
 
@@ -189,7 +190,7 @@ func (model *Model) checkSplits(transaction *types.Transaction) (err error) {
 
 	for _, split := range transaction.Splits {
 		if !model.accountsContainWriteAccess(userAccounts, split.AccountId) {
-			return errors.New(fmt.Sprintf("%s %s", "user does not have permission to access account", split.AccountId))
+			return fmt.Errorf("%s %s", "user does not have permission to access account", split.AccountId)
 		}
 
 		account := model.getAccountFromList(userAccounts, split.AccountId)

@@ -2,12 +2,13 @@ package model
 
 import (
 	"errors"
+	"testing"
+	"time"
+
 	"github.com/openaccounting/oa-server/core/mocks"
 	"github.com/openaccounting/oa-server/core/model/db"
 	"github.com/openaccounting/oa-server/core/model/types"
 	"github.com/stretchr/testify/assert"
-	"testing"
-	"time"
 )
 
 type TdUser struct {
@@ -39,33 +40,35 @@ func TestCreateUser(t *testing.T) {
 	// EmailVerifyCode string    `json:"-"`
 
 	user := types.User{
-		"0",
-		time.Unix(0, 0),
-		time.Unix(0, 0),
-		"John",
-		"Doe",
-		"johndoe@email.com",
-		"password",
-		"",
-		true,
-		"",
-		false,
-		"",
+		Id:              "0",
+		Inserted:        time.Unix(0, 0),
+		Updated:         time.Unix(0, 0),
+		FirstName:       "John",
+		LastName:        "Doe",
+		Email:           "johndoe@email.com",
+		Password:        "password",
+		PasswordHash:    "",
+		AgreeToTerms:    true,
+		PasswordReset:   "",
+		EmailVerified:   false,
+		EmailVerifyCode: "",
+		SignupSource:    "",
 	}
 
 	badUser := types.User{
-		"0",
-		time.Unix(0, 0),
-		time.Unix(0, 0),
-		"John",
-		"Doe",
-		"",
-		"password",
-		"",
-		true,
-		"",
-		false,
-		"",
+		Id:              "0",
+		Inserted:        time.Unix(0, 0),
+		Updated:         time.Unix(0, 0),
+		FirstName:       "John",
+		LastName:        "Doe",
+		Email:           "",
+		Password:        "password",
+		PasswordHash:    "",
+		AgreeToTerms:    true,
+		PasswordReset:   "",
+		EmailVerified:   false,
+		EmailVerifyCode: "",
+		SignupSource:    "",
 	}
 
 	tests := map[string]struct {
@@ -109,33 +112,35 @@ func TestCreateUser(t *testing.T) {
 func TestUpdateUser(t *testing.T) {
 
 	user := types.User{
-		"0",
-		time.Unix(0, 0),
-		time.Unix(0, 0),
-		"John2",
-		"Doe",
-		"johndoe@email.com",
-		"password",
-		"",
-		true,
-		"",
-		false,
-		"",
+		Id:              "0",
+		Inserted:        time.Unix(0, 0),
+		Updated:         time.Unix(0, 0),
+		FirstName:       "John2",
+		LastName:        "Doe",
+		Email:           "johndoe@email.com",
+		Password:        "password",
+		PasswordHash:    "",
+		AgreeToTerms:    true,
+		PasswordReset:   "",
+		EmailVerified:   false,
+		EmailVerifyCode: "",
+		SignupSource:    "",
 	}
 
 	badUser := types.User{
-		"0",
-		time.Unix(0, 0),
-		time.Unix(0, 0),
-		"John2",
-		"Doe",
-		"johndoe@email.com",
-		"",
-		"",
-		true,
-		"",
-		false,
-		"",
+		Id:              "0",
+		Inserted:        time.Unix(0, 0),
+		Updated:         time.Unix(0, 0),
+		FirstName:       "John2",
+		LastName:        "Doe",
+		Email:           "johndoe@email.com",
+		Password:        "",
+		PasswordHash:    "",
+		AgreeToTerms:    true,
+		PasswordReset:   "",
+		EmailVerified:   false,
+		EmailVerifyCode: "",
+		SignupSource:    "",
 	}
 
 	tests := map[string]struct {

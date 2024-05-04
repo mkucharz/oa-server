@@ -61,7 +61,7 @@ func (model *Model) CreateAccount(account *types.Account, userId string) (err er
 	}
 
 	if !model.accountsContainWriteAccess(userAccounts, account.Parent) {
-		return errors.New(fmt.Sprintf("%s %s", "user does not have permission to access account", account.Parent))
+		return fmt.Errorf("%s %s", "user does not have permission to access account", account.Parent)
 	}
 
 	err = model.db.InsertAccount(account)
@@ -120,7 +120,7 @@ func (model *Model) UpdateAccount(account *types.Account, userId string) (err er
 	}
 
 	if !model.accountsContainWriteAccess(userAccounts, account.Parent) {
-		return errors.New(fmt.Sprintf("%s %s", "user does not have permission to access account", account.Parent))
+		return fmt.Errorf("%s %s", "user does not have permission to access account", account.Parent)
 	}
 
 	// make sure parent is not a descendant of account
@@ -173,7 +173,7 @@ func (model *Model) DeleteAccount(id string, userId string, orgId string) (err e
 	}
 
 	if !model.accountsContainWriteAccess(userAccounts, id) {
-		return errors.New(fmt.Sprintf("%s %s", "user does not have permission to access account", id))
+		return fmt.Errorf("%s %s", "user does not have permission to access account", id)
 	}
 
 	// don't allow deleting of accounts that have transactions or child accounts
@@ -184,7 +184,7 @@ func (model *Model) DeleteAccount(id string, userId string, orgId string) (err e
 	}
 
 	if count != 0 {
-		return errors.New("Cannot delete an account that has transactions")
+		return errors.New("cannot delete an account that has transactions")
 	}
 
 	count, err = model.db.GetChildCountByAccountId(id)
@@ -194,7 +194,7 @@ func (model *Model) DeleteAccount(id string, userId string, orgId string) (err e
 	}
 
 	if count != 0 {
-		return errors.New("Cannot delete an account that has children")
+		return errors.New("cannot delete an account that has children")
 	}
 
 	account, err := model.db.GetAccount(id)
@@ -228,7 +228,7 @@ func (model *Model) getAccounts(orgId string, userId string, tokenId string, dat
 
 	var allAccounts []*types.Account
 
-	if withBalances == true {
+	if withBalances {
 		allAccounts, err = model.getAllAccountsWithBalances(orgId, date)
 	} else {
 		allAccounts, err = model.getAllAccounts(orgId)
@@ -276,7 +276,7 @@ func (model *Model) getAccounts(orgId string, userId string, tokenId string, dat
 	for id, account := range readAccessMap {
 		_, ok := writeAccessMap[id]
 
-		if ok == false {
+		if !ok {
 			account.ReadOnly = true
 			filtered = append(filtered, account)
 		}

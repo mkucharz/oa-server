@@ -2,12 +2,13 @@ package auth
 
 import (
 	"errors"
+	"testing"
+	"time"
+
 	"github.com/openaccounting/oa-server/core/model/db"
 	"github.com/openaccounting/oa-server/core/model/types"
 	"github.com/openaccounting/oa-server/core/util"
 	"github.com/stretchr/testify/assert"
-	"testing"
-	"time"
 )
 
 type TdUser struct {
@@ -28,18 +29,19 @@ func (td *TdUser) GetVerifiedUserByEmail(email string) (*types.User, error) {
 
 func (td *TdUser) GetVerifiedUserByEmail_1(email string) (*types.User, error) {
 	return &types.User{
-		"1",
-		time.Unix(0, 0),
-		time.Unix(0, 0),
-		"John",
-		"Doe",
-		"johndoe@email.com",
-		"password",
-		"$2a$10$KrtvADe7jwrmYIe3GXFbNupOQaPIvyOKeng5826g4VGOD47TpAisG",
-		true,
-		"",
-		false,
-		"",
+		Id:              "1",
+		Inserted:        time.Unix(0, 0),
+		Updated:         time.Unix(0, 0),
+		FirstName:       "John",
+		LastName:        "Doe",
+		Email:           "johndoe@email.com",
+		Password:        "password",
+		PasswordHash:    "$2a$10$KrtvADe7jwrmYIe3GXFbNupOQaPIvyOKeng5826g4VGOD47TpAisG",
+		AgreeToTerms:    true,
+		PasswordReset:   "",
+		EmailVerified:   false,
+		EmailVerifyCode: "",
+		SignupSource:    "",
 	}, nil
 }
 

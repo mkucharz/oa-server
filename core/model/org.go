@@ -2,9 +2,10 @@ package model
 
 import (
 	"errors"
+	"time"
+
 	"github.com/openaccounting/oa-server/core/model/types"
 	"github.com/openaccounting/oa-server/core/util"
-	"time"
 )
 
 type OrgInterface interface {
@@ -180,8 +181,8 @@ func (model *Model) CreateInvite(invite *types.Invite, userId string) error {
 		}
 	}
 
-	if isAdmin == false {
-		return errors.New("Must be org admin to invite users")
+	if !isAdmin {
+		return errors.New("must be org admin to invite users")
 	}
 
 	inviteId, err := util.NewInviteId()
@@ -206,7 +207,7 @@ func (model *Model) CreateInvite(invite *types.Invite, userId string) error {
 }
 
 func (model *Model) AcceptInvite(invite *types.Invite, userId string) error {
-	if invite.Accepted != true {
+	if !invite.Accepted {
 		return errors.New("accepted must be true")
 	}
 

@@ -2,12 +2,13 @@ package model
 
 import (
 	"errors"
+	"testing"
+	"time"
+
 	"github.com/openaccounting/oa-server/core/model/db"
 	"github.com/openaccounting/oa-server/core/model/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"testing"
-	"time"
 )
 
 type TdAccount struct {
@@ -74,6 +75,7 @@ func (td *TdAccount) AddNativeBalancesCost(accounts []*types.Account, date time.
 
 func (td *TdAccount) GetSplitCountByAccountId(id string) (int64, error) {
 	args := td.Called(id)
+
 	return args.Get(0).(int64), args.Error(1)
 }
 
@@ -96,7 +98,7 @@ func (td *TdAccount) GetAccount(id string) (*types.Account, error) {
 
 func getTestAccounts() []*types.Account {
 	return []*types.Account{
-		&types.Account{
+		{
 			Id:           "2",
 			OrgId:        "1",
 			Name:         "Assets",
@@ -105,7 +107,7 @@ func getTestAccounts() []*types.Account {
 			Precision:    2,
 			DebitBalance: true,
 		},
-		&types.Account{
+		{
 			Id:           "3",
 			OrgId:        "1",
 			Name:         "Current Assets",
@@ -114,7 +116,7 @@ func getTestAccounts() []*types.Account {
 			Precision:    2,
 			DebitBalance: true,
 		},
-		&types.Account{
+		{
 			Id:           "1",
 			OrgId:        "1",
 			Name:         "Root",
@@ -161,11 +163,14 @@ func TestCreateAccount(t *testing.T) {
 		t.Logf("Running test case: %s", name)
 
 		td := &TdAccount{}
+
 		td.On("GetAccountsByOrgId", "1").Return(getTestAccounts(), nil)
+		td.On("GetSplitCountByAccountId", test.account.Parent).Return(int64(0), nil)
 
 		model := NewModel(td, nil, types.Config{})
 
 		err := model.CreateAccount(test.account, "1")
+
 		assert.Equal(t, test.err, err)
 	}
 }
@@ -206,6 +211,7 @@ func TestUpdateAccount(t *testing.T) {
 
 		td := &TdAccount{}
 		td.On("GetAccountsByOrgId", "1").Return(getTestAccounts(), nil)
+		td.On("GetSplitCountByAccountId", test.account.Parent).Return(int64(0), nil)
 
 		model := NewModel(td, nil, types.Config{})
 
@@ -230,7 +236,7 @@ func TestDeleteAccount(t *testing.T) {
 			count:     0,
 		},
 		"error": {
-			err:       errors.New("Cannot delete an account that has transactions"),
+			err:       errors.New("cannot delete an account that has transactions"),
 			accountId: "3",
 			count:     1,
 		},
